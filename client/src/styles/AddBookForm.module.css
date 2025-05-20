@@ -1,0 +1,37 @@
+.adminPage {
+    max-width: 40rem;
+    margin: 0 auto;
+}
+
+.addBookForms {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 2rem;
+    width: 100%;
+}
+
+
+.form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: 100%;
+
+    h2 {
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    label {
+        text-align: left;
+    }
+
+    input {
+        margin-bottom: .5rem;
+    }
+
+    button {
+        width: 100%;
+    }
+}

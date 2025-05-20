@@ -1,0 +1,14 @@
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  label {
+    margin-right: .5rem;
+  }
+
+  .form-group {
+    display: flex;
+    justify-content: space-between;
+  }
+}

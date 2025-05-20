@@ -1,0 +1,82 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Environment variables
+.env
+.env.development
+.env.test
+.env.production
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Build outputs
+dist/
+build/
+out/
+
+# Cache and temp files
+.npm
+.eslintcache
+.node_repl_history
+.nyc_output
+*.tsbuildinfo
+.temp
+.cache
+
+# Database files
+*.sqlite
+*.sqlite3
+*.db
+*.sql
+!schema.sql
+
+# Uploaded files and media (if applicable)
+uploads/
+media/
+public/uploads/
+temp/
+
+# IDE and editor folders
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Testing
+coverage/
+.nyc_output/
+
+# Misc
+.directory
+.yarn-integrity
+.dockerignore
+.vercel
+.netlify

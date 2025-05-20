@@ -1,0 +1,41 @@
+.header {
+    display: flex;
+    align-items: flex-start;
+
+    h1 {
+        margin: unset;
+    }
+
+    img {
+        margin-right: 1rem;
+    }
+}
+
+.homeButton {
+    margin-bottom: 2rem;
+}
+
+.book {
+    max-width: 40em;
+    margin: 0 auto;
+}
+
+.bookDetails {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+
+    p {
+        padding-left: 3px;
+        margin: unset;
+    }
+}
+
+.coverImage {
+    max-height: 187px;
+    max-width: 125px;
+}
+
+.notes {
+    text-align: left;
+}

@@ -1,0 +1,38 @@
+.bookShelf {
+    max-width: 40rem;
+    margin: 0 auto;
+}
+
+h1 {
+    text-align: center;
+    margin-top: unset;
+}
+
+ul {
+    text-align: left;
+    padding: unset;
+    
+    li {
+        list-style: none;
+    }
+}
+
+.book {
+    overflow: hidden;
+}
+
+.coverImage {
+    max-height: 187px;
+    max-width: 125px;
+    margin-right: 1rem;
+    float: left;
+}
+
+.bookTitle {
+    text-decoration: underline;
+}
+
+.author {
+    margin: unset;
+}
+
