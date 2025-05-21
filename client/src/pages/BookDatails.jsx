@@ -25,14 +25,13 @@ const BookDatails = () => {
     }
 
     fetchBooknotes(book.id)
-      .then((notesData) => {
-        // console.log("NotesData recieved", notesData);
-        setNotes(notesData);
+      .then((res) => {
+        setNotes(res || []);
       })
       .catch((err) => {
-        console.error("error loading notes", err);
+        console.log("Error fetching notes", err);
       });
-  }, [book.isbn]);
+  }, []);
 
   return (
     <>

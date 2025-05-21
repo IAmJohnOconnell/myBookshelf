@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
+import supabase from "../config/supabaseClient";
 import styles from "../styles/AddBookForm.module.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { fetchBookList, fetchAuthorList } from "../services/apiService";
 
 const AddBookForm = () => {
@@ -15,11 +16,12 @@ const AddBookForm = () => {
   const [noteContent, setNoteContent] = useState("");
   const [bookList, setBookList] = useState([]);
   const [authorList, setAuthorList] = useState([]);
+  const [formError, setFormError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchBookList()
       .then((res) => {
-        // console.log(res);
         setBookList(res || []);
       })
       .catch((err) => {
@@ -29,7 +31,6 @@ const AddBookForm = () => {
 
     fetchAuthorList()
       .then((data) => {
-        // console.log(data);
         setAuthorList(data || []);
       })
       .catch((err) => {
@@ -40,57 +41,61 @@ const AddBookForm = () => {
 
   const handleAddBook = async (e) => {
     e.preventDefault();
+
+    if (!title || !summary || !isbn || !dateRead || !authorId) {
+      setFormError("Please fill in all fields correctly");
+      return;
+    }
+
     const book = {
       title,
       summary,
       isbn,
-      dateRead,
-      authorId,
+      date_read: dateRead,
+      author_id: authorId,
     };
 
-    try {
-      const res = await fetch("http://localhost:3000/addBook", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(book),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setTitle("");
-        setSummary("");
-        setIsbn("");
-        setDateRead("");
-        setAuthorId("");
-      } else {
-        console.log("Failed to save Book");
-      }
-    } catch (err) {
-      console.log("Error occurred while saving book", err);
+    const { data, error } = await supabase
+      .from("books")
+      .insert([book])
+      .select();
+
+    if (error) {
+      console.log("Error adding book", error);
+      setFormError(error);
+    }
+
+    if (data) {
+      console.log(data);
+      setFormError(null);
+      setTitle("");
+      setSummary("");
+      setIsbn("");
+      setDateRead("");
+      setAuthorId("");
+      navigate("/");
     }
   };
 
   const handleAddAuthor = async (e) => {
     e.preventDefault();
-    const author = { authorFirstName, authorLastName };
-    try {
-      const res = await fetch("http://localhost:3000/addAuthor", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(author),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setAuthorFirstname("");
-        setAuthorLastname("");
-      } else {
-        console.log("Failed to save author");
-      }
-    } catch (err) {
-      console.log("Error occured while saving author", err);
+    const author = { first_name: authorFirstName, last_name: authorLastName };
+
+    const { data, error } = await supabase
+      .from("authors")
+      .insert([author])
+      .select();
+
+    if (error) {
+      console.log("Error adding author", error);
+      setFormError(error);
+    }
+
+    if (data) {
+      console.log(data);
+      setAuthorFirstname("");
+      setAuthorLastname("");
+      setFormError(null);
     }
   };
 
@@ -98,30 +103,27 @@ const AddBookForm = () => {
     e.preventDefault();
 
     const noteData = {
-      noteContent: noteContent,
+      note_content: noteContent,
       bookId: document.getElementById("selectedBook").value,
-      createdDate: createdDate,
+      created_date: createdDate,
     };
 
     console.log(document.getElementById("selectedBook").value);
 
-    try {
-      const res = await fetch("http://localhost:3000/addNote", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(noteData),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setNoteContent("");
-        setCreatedDate("");
-      } else {
-        console.log("Failed to save note");
-      }
-    } catch (err) {
-      console.log("Error occurred when saving note");
+    const { data, error } = await supabase
+      .from("notes")
+      .insert([noteData])
+      .select();
+
+    if (error) {
+      console.log("Error adding note", error);
+      setFormError(error);
+    }
+
+    if (data) {
+      setFormError(null);
+      setNoteContent("");
+      setCreatedDate("");
     }
   };
 
@@ -131,6 +133,7 @@ const AddBookForm = () => {
       <div className={styles.addBookForms}>
         <form className={styles.form} onSubmit={handleAddBook}>
           <h2>Add A Book</h2>
+          {formError && <p>{formError}</p>}
           <label htmlFor="title">Title</label>
           <input
             type="text"

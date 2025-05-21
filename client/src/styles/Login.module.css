@@ -7,7 +7,7 @@
     margin-right: .5rem;
   }
 
-  .form-group {
+  .formGroup {
     display: flex;
     justify-content: space-between;
   }

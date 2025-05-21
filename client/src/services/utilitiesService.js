@@ -11,7 +11,6 @@ export const formatDate = (date) => {
 
 export const fetchImage = async (isbn) => {
   const url = `https://covers.openlibrary.org/b/isbn/${isbn}-M.jpg`;
-  // console.log(url);
   try {
     const img = new Image();
     return new Promise((resolve, reject) => {

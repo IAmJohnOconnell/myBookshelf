@@ -1,21 +1,45 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { fetchImage } from "../services/utilitiesService";
+import supabase from "../config/supabaseClient";
 import styles from "../styles/BookList.module.css";
 
 const Booklist = () => {
   const [bookList, setBookList] = useState([]);
   const [bookImages, setBookImages] = useState({});
+  const [fetchError, setFetchError] = useState(null);
+  const [session, setSession] = useState(null);
+
+  const fetchSession = async () => {
+    const currentSession = await supabase.auth.getSession();
+    setSession(currentSession.data.session);
+    console.log(currentSession);
+  };
 
   useEffect(() => {
-    fetch("http://localhost:3000/")
-      .then((res) => res.json())
-      .then((data) => {
-        // data.forEach((book) => {
-        //   console.log(`Book: ${book.title}, ID: ${book.id}`);
-        // });
+    fetchSession();
+
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setSession(session);
+      }
+    );
+
+    const fetchBookList = async () => {
+      const { data, error } = await supabase
+        .from("books")
+        .select(
+          `id, title, summary, isbn, date_read, authors (id, first_name, last_name)`
+        );
+
+      if (error) {
+        setFetchError("Error fetching book list");
+        setBookList(null);
+        console.log(error);
+      }
+      if (data) {
         setBookList(data);
-        // console.log(data);
+        setFetchError(null);
 
         data.forEach((book) => {
           if (book.isbn) {
@@ -29,9 +53,19 @@ const Booklist = () => {
             });
           }
         });
-      })
-      .catch((error) => console.error(error));
+      }
+    };
+
+    fetchBookList();
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
   }, []);
+
+  const logout = async () => {
+    await supabase.auth.signOut();
+  };
 
   return (
     <div className={styles.bookShelf}>
@@ -43,9 +77,18 @@ const Booklist = () => {
         shelf, this page offers a glimpse into my reading journey.
       </p>
       <div className="links">
-        {/* <Link className={styles.addBookButton} to="/login">
-          Login
-        </Link> */}
+        {session ? (
+          <>
+            <Link className={styles.addBookButton} to="/addBook">
+              <button>Add Book</button>
+            </Link>
+            <button onClick={logout}>Log Out</button>
+          </>
+        ) : (
+          <Link className={styles.addBookButton} to="/login">
+            {/* <button>Login</button> */}
+          </Link>
+        )}
       </div>
       <ul>
         {bookList &&
@@ -64,7 +107,7 @@ const Booklist = () => {
                     <h2 className={styles.bookTitle}>{book.title}</h2>
                   </Link>
                   <h3 className={styles.author}>
-                    by {book.first_name} {book.last_name}
+                    by {book.authors.first_name} {book.authors.last_name}
                   </h3>
                   <p>{book.summary}</p>
                 </div>

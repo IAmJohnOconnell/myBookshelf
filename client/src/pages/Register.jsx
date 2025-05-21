@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import styles from "../styles/Login.module.css";
+import supabase from "../config/supabaseClient";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -10,31 +12,25 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
 
-    try {
-      const response = await fetch("http://localhost:3000/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username: email, password }),
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        navigate(data.redirectTo); // Redirect to the specified route
-      } else {
-        setError(data.message);
-      }
-    } catch (err) {
-      console.error("Error registering:", err);
-      setError("An error occurred. Please try again.");
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+    if (error) {
+      console.log("Error signing up", error);
+      return;
     }
+    navigate("/login");
   };
 
   return (
-    <form action="/register" method="POST" onSubmit={handleRegister}>
-      <div class="form-group">
+    <form
+      action="/register"
+      method="POST"
+      className={styles.loginForm}
+      onSubmit={handleRegister}
+    >
+      <div className={styles.formGroup}>
         <label for="email">Email</label>
         <input
           type="email"
@@ -45,7 +41,7 @@ const Register = () => {
           required
         />
       </div>
-      <div class="form-group">
+      <div className={styles.formGroup}>
         <label for="password">Password</label>
         <input
           type="password"
