@@ -104,7 +104,7 @@ const AddBookForm = () => {
 
     const noteData = {
       note_content: noteContent,
-      bookId: document.getElementById("selectedBook").value,
+      book_id: document.getElementById("selectedBook").value,
       created_date: createdDate,
     };
 
@@ -124,6 +124,7 @@ const AddBookForm = () => {
       setFormError(null);
       setNoteContent("");
       setCreatedDate("");
+      navigate("/addBook");
     }
   };
 

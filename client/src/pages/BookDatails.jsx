@@ -59,7 +59,7 @@ const BookDatails = () => {
           ) : (
             <p>
               You haven't written any notes for this book yet. Here is some
-              nonsens instead: <br />
+              nonsense instead: <br />
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae
               quod ipsum labore at fugiat iusto eaque illo quibusdam voluptas
               saepe est, sit, placeat itaque sint consequatur nemo consectetur
